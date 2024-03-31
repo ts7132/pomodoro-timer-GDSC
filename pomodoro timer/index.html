@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ecf0f1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .timer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .timer-display {
+            width: 200px;
+            height: 200px;
+            background-color: #cfdd2f;
+            color: #ecf0f1;
+            border-radius: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .timer-label {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .timer-time {
+            font-size: 40px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .control-button {
+            padding: 10px 20px;
+            background-color: #c72724;
+            color: #ecf0f1;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .control-button:hover {
+            background-color: #cfdd2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-container">
+        <div class="timer-display" id="pomodoro-timer" data-duration="25">
+            <p class="timer-label">Pomodoro</p>
+            <p class="timer-time" id="pomodoro-time">25:00</p>
+        </div>
+        <div class="timer-display" id="short-timer" data-duration="5">
+            <p class="timer-label">Short Break</p>
+            <p class="timer-time" id="short-break-time">05:00</p>
+        </div>
+        <div class="timer-display" id="long-timer" data-duration="15">
+            <p class="timer-label">Long Break</p>
+            <p class="timer-time" id="long-break-time">15:00</p>
+        </div>
+    </div>
+    <div class="control-buttons">
+        <button class="control-button" id="start">Start</button>
+        <button class="control-button" id="pause">Pause</button>
+        <button class="control-button" id="pomodoro-session">Pomodoro Session</button>
+        <button class="control-button" id="short-break">Short Break</button>
+        <button class="control-button" id="long-break">Long Break</button>
+    </div>
+    
+    <script>
+        let timer;
+        let timeLeft;
+
+        function startTimer(duration, timerDisplay) {
+            let endTime = new Date().getTime() + duration * 60 * 1000;
+            timer = setInterval(function() {
+                let now = new Date().getTime();
+                timeLeft = endTime - now;
+                if (timeLeft >= 0) {
+                    let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    timerDisplay.innerHTML = ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')};
+                } else {
+                    clearInterval(timer);
+                    timerDisplay.innerHTML = '00:00';
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+        }
+
+        document.getElementById('start').addEventListener('click', function() {
+            let duration = parseInt(document.getElementById('pomodoro-timer').getAttribute('data-duration'));
+            let timerDisplay = document.getElementById('pomodoro-time');
+            startTimer(duration, timerDisplay);
+        });
+
+        document.getElementById('pause').addEventListener('click', function() {
+            stopTimer();
+        });
+
+        document.getElementById('pomodoro-session').addEventListener('click', function() {
+            let duration = parseInt(document.getElementById('pomodoro-timer').getAttribute('data-duration'));
+            let timerDisplay = document.getElementById('pomodoro-time');
+            startTimer(duration, timerDisplay);
+        });
+
+        document.getElementById('short-break').addEventListener('click', function() {
+            let duration = parseInt(document.getElementById('short-timer').getAttribute('data-duration'));
+            let timerDisplay = document.getElementById('short-break-time');
+            startTimer(duration, timerDisplay);
+        });
+
+        document.getElementById('long-break').addEventListener('click', function() {
+            let duration = parseInt(document.getElementById('long-timer').getAttribute('data-duration'));
+            let timerDisplay = document.getElementById('long-break-time');
+            startTimer(duration, timerDisplay);
+        });
+    </script>
+</body>
+</html>
+
